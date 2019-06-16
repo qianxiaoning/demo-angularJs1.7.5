@@ -10,6 +10,7 @@ export default function appPositionList($http){
         template:positionList,
         scope:{
             data: '=',// 表示指令和页面的控制器是同一个scope，暴露一个data的接口
+            fatherClick: '&',
             filterObj:'=',
             isFavorite:'='
         },
@@ -22,7 +23,11 @@ export default function appPositionList($http){
                     // console.log(res);
                     item.select = !item.select;
                 }).catch();                
-            }
+            };
+            scope.subClickFun = function(item){
+                console.log(item);
+                scope.fatherClick(item);
+            };
         }
     }
 }

@@ -3,6 +3,9 @@ function mainCtrl($http,$scope) {
         // console.log(res);
         $scope.list = res.data;
     }).catch();
+    $scope.alertFun = function(id,job){
+        alert(job);
+    };
 }
 
 mainCtrl.$inject = ['$http','$scope'];

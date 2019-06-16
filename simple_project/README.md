@@ -19,34 +19,42 @@ src/
 ```
 - 一个父子组件数据流向的例子：（约定父页面的是$scope，组件内是scope，小scope）
 ```
-1.page通过page的controller请求到$scope.data
-2.组件通过设定
+父组件：pages/main.html
+父控制器：controllers/mainCtrl.js
+子组件：components/positionList.html
+子指令：directives/appPositionList.js
+
+1.main 中 调用了组件 positionList
+<div app-position-list="" data='list'></div>
+
+2.mainCtrl中$scope.list = res.data; list变量有了值
+
+3.appPositionList指令暴露接口data去获取list的值
 scope:{
-    list:'='
+    data: '='
 }
-在pages上组件调用处，list接口去取data
-<xxx list='data'/>
-3.组件中用list变量循环，点击li调用组件的myClick方法，传入item。
-    组件中只能用：
-    1.scope定义的接口取自父页面的数据 如：list
-    2.自己定义在小scope上的变量 如：selectId
-<li class='{{selectId===item.id?"on":""}}' ng-repeat='item in list' ng-bind='item.name' ng-click='myClick(item);'></li>
-4.在组件中link函数里定义组件上的myClick方法，改变小scope对象
-link:function(scope){
-    scope.myClick = function(item){
-        scope.selectId = item.id; // 用传入的item改变selectId的值
-        scope.fatherClick(item); // 触发父页面组件上的回调方法，传入item
-    }
-}
+
+4.positionList组件中 用data去循环li
+<li ng-repeat='item in data'></li>
+
+5.li绑定组件方法，传入item项数据
+ng-click='subClickFun(item)'
+
+6.在subClickFun方法中发起fatherClick回调方法
+scope.subClickFun = function(item){
+    scope.fatherClick(item);
+};
+
+7.组件中定义回调函数接口 fatherClick: '&'
 scope:{
-    tabClick:'&' // 定义父页面组件上的回调方法
+    data: '=',
+    fatherClick: '&'
 }
-5.父页面组件上：
-<xxx list='data' father-click='xxxClick(id,name)'/> //通过组件的回调函数接口触发父页面$scope上的xxxClick方法，参数(id,name)为组件里传入的item上的属性
-6.父页面controller上xxxClick被触发
-$scope.anotherName = '';
-$scope.xxxClick = function(id,name){
-    // 来改变$scope上的另一个变量anotherName，进而影响父页面上的其他组件，完成组件间交互
-    $scope.anotherName = name;
-}
+
+8.会触发main.html上 组件处的father-click自定义事件
+<div app-position-list="" data='list' father-click='alertFun(id,job);'></div>
+
+9.触发父页面上的alertFun方法
+
+10.完成 父数据传子，子操作返回父
 ```
