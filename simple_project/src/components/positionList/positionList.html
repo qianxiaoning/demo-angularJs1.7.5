@@ -1,8 +1,4 @@
 <ul class='positionList'>
-    <li>        
-        <img src="../../image/company-3.png" alt="">
-        <p>0</p>
-    </li>
     <li ui-sref='position({id:item.id})' ng-repeat='item in data|filterByObj:filterObj'>
         <img ng-src="{{item.img}}" alt="">
         <p>{{item.p}}</p>

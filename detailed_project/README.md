@@ -1,4 +1,5 @@
 ### detailed_project 详细项目
+- 目录结构
 ```
 src/
     components/ 组件
